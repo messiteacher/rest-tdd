@@ -1,9 +1,9 @@
 package com.example.rest_tdd.domain.post.post.entity;
 
-import com.example.auth.domain.member.member.entity.Member;
-import com.example.auth.domain.post.comment.entity.Comment;
-import com.example.auth.global.entity.BaseTime;
-import com.example.auth.global.exception.ServiceException;
+import com.example.rest_tdd.domain.member.member.entity.Member;
+import com.example.rest_tdd.domain.post.comment.entity.Comment;
+import com.example.rest_tdd.global.entity.BaseTime;
+import com.example.rest_tdd.global.exception.ServiceException;
 import jakarta.persistence.*;
 import lombok.*;
 

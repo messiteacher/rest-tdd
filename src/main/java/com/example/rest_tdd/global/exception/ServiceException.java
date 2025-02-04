@@ -1,6 +1,6 @@
 package com.example.rest_tdd.global.exception;
 
-import com.example.rest-tdd.global.dto.RsData;
+import com.example.rest_tdd.global.dto.RsData;
 
 public class ServiceException extends RuntimeException {
 

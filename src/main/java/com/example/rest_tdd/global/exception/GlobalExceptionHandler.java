@@ -1,7 +1,7 @@
 package com.example.rest_tdd.global.exception;
 
-import com.example.rest-tdd.global.app.AppConfig;
-import com.example.rest-tdd.global.dto.RsData;
+import com.example.rest_tdd.global.app.AppConfig;
+import com.example.rest_tdd.global.dto.RsData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

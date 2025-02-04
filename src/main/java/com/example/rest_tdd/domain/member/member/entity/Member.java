@@ -1,6 +1,6 @@
 package com.example.rest_tdd.domain.member.member.entity;
 
-import com.example.rest-tdd.global.entity.BaseTime;
+import com.example.rest_tdd.global.entity.BaseTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;

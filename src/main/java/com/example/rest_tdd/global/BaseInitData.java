@@ -1,9 +1,9 @@
 package com.example.rest_tdd.global;
 
-import com.example.rest-tdd.domain.member.member.entity.Member;
-import com.example.rest-tdd.domain.member.member.service.MemberService;
-import com.example.rest-tdd.domain.post.post.entity.Post;
-import com.example.rest-tdd.domain.post.post.service.PostService;
+import com.example.rest_tdd.domain.member.member.entity.Member;
+import com.example.rest_tdd.domain.member.member.service.MemberService;
+import com.example.rest_tdd.domain.post.post.entity.Post;
+import com.example.rest_tdd.domain.post.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;

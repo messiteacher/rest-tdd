@@ -1,6 +1,6 @@
 package com.example.rest_tdd.domain.member.member.dto;
 
-import com.example.rest-tdd.domain.member.member.entity.Member;
+import com.example.rest_tdd.domain.member.member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 

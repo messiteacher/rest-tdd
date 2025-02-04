@@ -1,11 +1,11 @@
 package com.example.rest_tdd.domain.post.post.controller;
 
-import com.example.auth.domain.member.member.entity.Member;
-import com.example.auth.domain.post.post.dto.PostDto;
-import com.example.auth.domain.post.post.entity.Post;
-import com.example.auth.domain.post.post.service.PostService;
-import com.example.auth.global.Rq;
-import com.example.auth.global.dto.RsData;
+import com.example.rest_tdd.domain.member.member.entity.Member;
+import com.example.rest_tdd.domain.post.post.dto.PostDto;
+import com.example.rest_tdd.domain.post.post.entity.Post;
+import com.example.rest_tdd.domain.post.post.service.PostService;
+import com.example.rest_tdd.global.Rq;
+import com.example.rest_tdd.global.dto.RsData;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;

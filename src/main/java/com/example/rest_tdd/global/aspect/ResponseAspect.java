@@ -1,6 +1,6 @@
 package com.example.rest_tdd.global.aspect;
 
-import com.example.rest-tdd.global.dto.RsData;
+import com.example.rest_tdd.global.dto.RsData;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;

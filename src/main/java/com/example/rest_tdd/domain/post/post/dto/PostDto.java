@@ -1,6 +1,6 @@
 package com.example.rest_tdd.domain.post.post.dto;
 
-import com.example.auth.domain.post.post.entity.Post;
+import com.example.rest_tdd.domain.post.post.entity.Post;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 

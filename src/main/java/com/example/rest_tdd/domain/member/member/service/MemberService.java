@@ -1,7 +1,7 @@
 package com.example.rest_tdd.domain.member.member.service;
 
-import com.example.rest-tdd.domain.member.member.entity.Member;
-import com.example.rest-tdd.domain.member.member.repository.MemberRepository;
+import com.example.rest_tdd.domain.member.member.entity.Member;
+import com.example.rest_tdd.domain.member.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
