@@ -71,12 +71,11 @@ class RestTddApplicationTests {
 	@Test
 	@DisplayName("회원 가입2 - username이 이미 존재하는 케이스")
 	void join2() throws Exception {
-
 		ResultActions resultActions = mvc.perform(
 						post("/api/v1/members/join")
 								.content("""
                                         {
-                                            "username": "user",
+                                            "username": "user1",
                                             "password": "1234",
                                             "nickname": "무명"
                                         }
