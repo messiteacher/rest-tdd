@@ -41,7 +41,7 @@ class RestTddApplicationTests {
 						post("/api/v1/members/join")
 								.content("""
                                         {
-                                            "username": "user1",
+                                            "username": "userNew",
                                             "password": "1234",
                                             "nickname": "무명"
                                         }
@@ -52,7 +52,7 @@ class RestTddApplicationTests {
 				)
 				.andDo(print());
 
-		Member member = memberService.findByUsername("user1").get();
+		Member member = memberService.findByUsername("userNew").get();
 
 		assertThat(member.getNickname()).isEqualTo("무명");
 
@@ -70,7 +70,8 @@ class RestTddApplicationTests {
 
 	@Test
 	@DisplayName("회원 가입2 - username이 이미 존재하는 케이스")
-	void join2() throws Exception {
+	void login() throws Exception {
+
 		ResultActions resultActions = mvc.perform(
 						post("/api/v1/members/join")
 								.content("""
@@ -91,6 +92,36 @@ class RestTddApplicationTests {
 				.andExpect(handler().methodName("join"))
 				.andExpect(jsonPath("$.code").value("409-1"))
 				.andExpect(jsonPath("$.msg").value("이미 사용중인 아이디입니다."));
+	}
+
+	@Test
+	@DisplayName("로그인")
+	void join2() throws Exception {
+
+		ResultActions resultActions = mvc.perform(
+						post("/api/v1/members/login")
+								.content("""
+                                        {
+                                            "username": "user1",
+                                            "password": "1234",
+                                        }
+                                        """.stripIndent())
+								.contentType(
+										new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
+								)
+				)
+				.andDo(print());
+
+		resultActions.andExpect(status().isOk())
+				.andExpect(handler().handlerType(ApiV1MemberController.class))
+				.andExpect(handler().methodName("login"))
+				.andExpect(jsonPath("$.code").value("200-1"))
+				.andExpect(jsonPath("$.msg").value("%s님 환영합니다".formatted("유저1")))
+				.andExpect(jsonPath("$.data").exists())
+				.andExpect(jsonPath("$.data.id").isNumber())
+				.andExpect(jsonPath("$.data.nickname").value("무명"))
+				.andExpect(jsonPath("$.data.createdDate").exists())
+				.andExpect(jsonPath("$.data.modifiedDate").exists());;
 	}
 
 }
