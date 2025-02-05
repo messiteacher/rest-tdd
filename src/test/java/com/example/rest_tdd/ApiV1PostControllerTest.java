@@ -224,7 +224,7 @@ public class ApiV1PostControllerTest {
     }
 
     @Test
-    @DisplayName("글 수정 2 - no input data")
+    @DisplayName("글 수정 3 - no input data")
     void modify3() throws Exception {
 
         long postId = 1;
@@ -242,5 +242,23 @@ public class ApiV1PostControllerTest {
                         content : NotBlank : must not be blank
                         title : NotBlank : must not be blank
                         """.trim().stripIndent()));
+    }
+
+    @Test
+    @DisplayName("글 수정 4 - no permission")
+    void modify4() throws Exception {
+
+        long postId = 1;
+        String apiKey = "user2";
+        String title = "다른 유저의 글 제목 수정";
+        String content = "다른 유저의 글 내용 수정";
+
+        ResultActions resultActions = modifyRequest(postId, apiKey, title, content);
+
+        resultActions.andExpect(status().isForbidden())
+                .andExpect(handler().handlerType(ApiV1PostController.class))
+                .andExpect(handler().methodName("modify"))
+                .andExpect(jsonPath("$.code").value("403-1"))
+                .andExpect(jsonPath("$.msg").value("자신이 작성한 글만 수정 가능합니다."));
     }
 }
