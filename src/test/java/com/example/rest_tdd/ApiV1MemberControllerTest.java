@@ -71,7 +71,7 @@ public class ApiV1MemberControllerTest {
 
     @Test
     @DisplayName("회원 가입2 - username이 이미 존재하는 케이스")
-    void login() throws Exception {
+    void join2() throws Exception {
 
         ResultActions resultActions = mvc.perform(
                         post("/api/v1/members/join")
@@ -96,8 +96,8 @@ public class ApiV1MemberControllerTest {
     }
 
     @Test
-    @DisplayName("로그인")
-    void join2() throws Exception {
+    @DisplayName("로그인 - 성공")
+    void login1() throws Exception {
 
         String username = "user1";
         String password = "1234";
@@ -130,5 +130,35 @@ public class ApiV1MemberControllerTest {
                 .andExpect(jsonPath("$.data.item.createdDate").value(member.getCreatedDate().toString()))
                 .andExpect(jsonPath("$.data.item.modifiedDate").value(member.getModifiedDate().toString()))
                 .andExpect(jsonPath("$.data.apiKey").exists());
+    }
+
+    @Test
+    @DisplayName("로그인 - 실패 - 비밀번호 틀림")
+    void login2() throws Exception {
+
+        String username = "user1";
+        String password = "1234";
+
+        ResultActions resultActions = mvc.perform(
+                        post("/api/v1/members/login")
+                                .content("""
+                                        {
+                                            "username": "%s",
+                                            "password": "%s"
+                                        }
+                                        """
+                                        .formatted(username, password)
+                                        .stripIndent())
+                                .contentType(
+                                        new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
+                                )
+                )
+                .andDo(print());
+
+        resultActions.andExpect(status().isUnauthorized())
+                .andExpect(handler().handlerType(ApiV1MemberController.class))
+                .andExpect(handler().methodName("login"))
+                .andExpect(jsonPath("$.code").value("401-1"))
+                .andExpect(jsonPath("$.msg").value("비밀번호가 일치하지 않습니다."));
     }
 }
