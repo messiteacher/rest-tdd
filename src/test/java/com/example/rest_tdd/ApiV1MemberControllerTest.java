@@ -95,14 +95,9 @@ public class ApiV1MemberControllerTest {
                 .andExpect(jsonPath("$.msg").value("이미 사용중인 아이디입니다."));
     }
 
-    @Test
-    @DisplayName("로그인 - 성공")
-    void login1() throws Exception {
+    private ResultActions loginRequest(String username, String password) throws Exception {
 
-        String username = "user1";
-        String password = "1234";
-
-        ResultActions resultActions = mvc.perform(
+        return mvc.perform(
                         post("/api/v1/members/login")
                                 .content("""
                                         {
@@ -116,7 +111,16 @@ public class ApiV1MemberControllerTest {
                                 )
                 )
                 .andDo(print());
+    }
 
+    @Test
+    @DisplayName("로그인 - 성공")
+    void login1() throws Exception {
+
+        String username = "user1";
+        String password = "1234";
+
+        ResultActions resultActions = loginRequest(username, password);
         Member member = memberService.findByUsername(username).get();
 
         resultActions.andExpect(status().isOk())
@@ -139,21 +143,7 @@ public class ApiV1MemberControllerTest {
         String username = "user1";
         String password = "1234";
 
-        ResultActions resultActions = mvc.perform(
-                        post("/api/v1/members/login")
-                                .content("""
-                                        {
-                                            "username": "%s",
-                                            "password": "%s"
-                                        }
-                                        """
-                                        .formatted(username, password)
-                                        .stripIndent())
-                                .contentType(
-                                        new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
-                                )
-                )
-                .andDo(print());
+        ResultActions resultActions = loginRequest(username, password);
 
         resultActions.andExpect(status().isUnauthorized())
                 .andExpect(handler().handlerType(ApiV1MemberController.class))
