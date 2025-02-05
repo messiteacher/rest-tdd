@@ -4,6 +4,7 @@ import com.example.rest_tdd.domain.post.post.dto.PostDto;
 import com.example.rest_tdd.domain.post.post.entity.Post;
 import com.example.rest_tdd.domain.post.post.service.PostService;
 import com.example.rest_tdd.global.dto.RsData;
+import com.example.rest_tdd.global.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,9 @@ public class ApiV1PostController {
     @GetMapping("/{id}")
     public RsData<PostDto> getItem(@PathVariable long id) {
 
-        Post post = postService.getItem(id).get();
+        Post post = postService.getItem(id).orElseThrow(
+                () -> new ServiceException("404-1", "존재하지 않는 글입니다.")
+        );
 
         return new RsData<>(
                 "200-1",
