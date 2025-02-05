@@ -1,5 +1,6 @@
 package com.example.rest_tdd;
 
+import com.example.rest_tdd.domain.post.post.controller.ApiV1PostController;
 import com.example.rest_tdd.domain.post.post.entity.Post;
 import com.example.rest_tdd.domain.post.post.service.PostService;
 import org.junit.jupiter.api.DisplayName;
@@ -53,7 +54,7 @@ public class ApiV1PostControllerTest {
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
-                .andExpect(handler().handlerType(ApiV1PostControllerTest.class))
+                .andExpect(handler().handlerType(ApiV1PostController.class))
                 .andExpect(handler().methodName("getItem"))
                 .andExpect(jsonPath("$.code").value("200-1"))
                 .andExpect(jsonPath("$.msg").value("%d번 글을 조회하였습니다.".formatted(postId)));
