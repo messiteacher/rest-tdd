@@ -125,10 +125,10 @@ public class ApiV1MemberControllerTest {
                 .andExpect(jsonPath("$.code").value("200-1"))
                 .andExpect(jsonPath("$.msg").value("%s님 환영합니다.".formatted(member.getNickname())))
                 .andExpect(jsonPath("$.data").exists())
-                .andExpect(jsonPath("$.data.item.id").isNumber())
+                .andExpect(jsonPath("$.data.item.id").value(member.getId()))
                 .andExpect(jsonPath("$.data.item.nickname").value(member.getNickname()))
-                .andExpect(jsonPath("$.data.item.createdDate").exists())
-                .andExpect(jsonPath("$.data.item.modifiedDate").exists())
+                .andExpect(jsonPath("$.data.item.createdDate").value(member.getCreatedDate().toString()))
+                .andExpect(jsonPath("$.data.item.modifiedDate").value(member.getModifiedDate().toString()))
                 .andExpect(jsonPath("$.data.apiKey").exists());
     }
 }
