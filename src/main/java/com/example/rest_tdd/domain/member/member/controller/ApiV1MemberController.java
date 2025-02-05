@@ -19,10 +19,10 @@ public class ApiV1MemberController {
     private final MemberService memberService;
     private final Rq rq;
 
-    record JoinReqBody(String username, String password, String nickname) {}
+    record JoinReqBody(@NotBlank String username, @NotBlank String password, @NotBlank String nickname) {}
 
     @PostMapping("/join")
-    public RsData<MemberDto> join(@RequestBody JoinReqBody reqBody) {
+    public RsData<MemberDto> join(@RequestBody @Valid JoinReqBody reqBody) {
 
         memberService.findByUsername(reqBody.username())
                 .ifPresent(member -> {
