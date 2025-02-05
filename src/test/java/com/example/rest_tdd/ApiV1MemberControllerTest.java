@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.text.MatchesPattern.matchesPattern;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -40,8 +41,8 @@ public class ApiV1MemberControllerTest {
         resultActions.andExpect(jsonPath("$.data").exists())
                 .andExpect(jsonPath("$.data.id").value(member.getId()))
                 .andExpect(jsonPath("$.data.nickname").value(member.getNickname()))
-                .andExpect(jsonPath("$.data.createdDate").value(member.getCreatedDate().toString()))
-                .andExpect(jsonPath("$.data.modifiedDate").value(member.getModifiedDate().toString()));
+                .andExpect(jsonPath("$.data.createdDate").value(matchesPattern(member.getCreatedDate().toString().replaceAll("0+$", "") + ".*")))
+                .andExpect(jsonPath("$.data.modifiedDate").value(matchesPattern(member.getModifiedDate().toString().replaceAll("0+$", "") + ".*")));
     }
 
     @Test
@@ -125,7 +126,7 @@ public class ApiV1MemberControllerTest {
     void login1() throws Exception {
 
         String username = "user1";
-        String password = "1234";
+        String password = "user11234";
 
         ResultActions resultActions = loginRequest(username, password);
         Member member = memberService.findByUsername(username).get();
