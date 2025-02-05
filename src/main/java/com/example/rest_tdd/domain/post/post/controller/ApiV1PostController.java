@@ -7,6 +7,8 @@ import com.example.rest_tdd.domain.post.post.service.PostService;
 import com.example.rest_tdd.global.Rq;
 import com.example.rest_tdd.global.dto.RsData;
 import com.example.rest_tdd.global.exception.ServiceException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +35,10 @@ public class ApiV1PostController {
         );
     }
 
-    record WriteReqBody(String title, String content) { }
+    record WriteReqBody(@NotBlank String title, @NotBlank String content) { }
+
     @PostMapping
-    public RsData<PostDto> write(@RequestBody WriteReqBody reqBody) {
+    public RsData<PostDto> write(@RequestBody @Valid WriteReqBody reqBody) {
 
         Member actor = rq.getAuthenticateActor();
         Post post = postService.write(actor, reqBody.title(), reqBody.content());
