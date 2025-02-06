@@ -17,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -123,5 +121,23 @@ public class ApiV1CommentControllerTest {
                 .andExpect(handler().methodName("delete"))
                 .andExpect(jsonPath("$.code").value("200-1"))
                 .andExpect(jsonPath("$.msg").value("%d번 댓글 삭제가 완료되었습니다.".formatted(commentId)));
+    }
+
+    @Test
+    @DisplayName("")
+    void items() throws Exception{
+
+        long postId = 1;
+
+        ResultActions resultActions = mvc.perform(
+                get("/api/v1/posts/%d/comments".formatted(postId))
+        ).andDo(print());
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1CommentController.class))
+                .andExpect(handler().methodName("getItems"))
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[1].id").value(2));
     }
 }
