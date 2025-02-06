@@ -124,7 +124,7 @@ public class ApiV1CommentControllerTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("댓글 다건 조회")
     void items() throws Exception{
 
         long postId = 1;
