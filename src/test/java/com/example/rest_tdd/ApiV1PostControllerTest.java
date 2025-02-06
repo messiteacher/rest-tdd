@@ -49,6 +49,26 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.data.modifiedDate").value(matchesPattern(post.getModifiedDate().toString().replaceAll("0+$", "") + ".*")));
     }
 
+    private void checkPosts(List<Post> posts, ResultActions resultActions) throws Exception {
+
+        for(int i = 0; i < posts.size(); i++) {
+
+            Post post = posts.get(i);
+
+            resultActions
+                    .andExpect(jsonPath("$.data.items[%d]".formatted(i)).exists())
+                    .andExpect(jsonPath("$.data.items[%d].id".formatted(i)).value(post.getId()))
+                    .andExpect(jsonPath("$.data.items[%d].title".formatted(i)).value(post.getTitle()))
+                    .andExpect(jsonPath("$.data.items[%d].content".formatted(i)).doesNotExist())
+                    .andExpect(jsonPath("$.data.items[%d].authorId".formatted(i)).value(post.getAuthor().getId()))
+                    .andExpect(jsonPath("$.data.items[%d].authorName".formatted(i)).value(post.getAuthor().getNickname()))
+                    .andExpect(jsonPath("$.data.items[%d].published".formatted(i)).value(post.isPublished()))
+                    .andExpect(jsonPath("$.data.items[%d].listed".formatted(i)).value(post.isListed()))
+                    .andExpect(jsonPath("$.data.items[%d].createdDate".formatted(i)).value(matchesPattern(post.getCreatedDate().toString().replaceAll("0+$", "") + ".*")))
+                    .andExpect(jsonPath("$.data.items[%d].modifiedDate".formatted(i)).value(matchesPattern(post.getModifiedDate().toString().replaceAll("0+$", "") + ".*")));
+        }
+    }
+
     private ResultActions writeRequest(String apiKey, String title, String content) throws Exception {
 
         ResultActions resultActions = mvc.perform(
@@ -123,22 +143,7 @@ public class ApiV1PostControllerTest {
         Page<Post> postPage = postService.getListedItems(1, 3, "title", "");
         List<Post> posts = postPage.getContent();
 
-        for(int i = 0; i < posts.size(); i++) {
-
-            Post post = posts.get(i);
-
-            resultActions
-                    .andExpect(jsonPath("$.data.items[%d]".formatted(i)).exists())
-                    .andExpect(jsonPath("$.data.items[%d].id".formatted(i)).value(post.getId()))
-                    .andExpect(jsonPath("$.data.items[%d].title".formatted(i)).value(post.getTitle()))
-                    .andExpect(jsonPath("$.data.items[%d].content".formatted(i)).doesNotExist())
-                    .andExpect(jsonPath("$.data.items[%d].authorId".formatted(i)).value(post.getAuthor().getId()))
-                    .andExpect(jsonPath("$.data.items[%d].authorName".formatted(i)).value(post.getAuthor().getNickname()))
-                    .andExpect(jsonPath("$.data.items[%d].published".formatted(i)).value(post.isPublished()))
-                    .andExpect(jsonPath("$.data.items[%d].listed".formatted(i)).value(post.isListed()))
-                    .andExpect(jsonPath("$.data.items[%d].createdDate".formatted(i)).value(matchesPattern(post.getCreatedDate().toString().replaceAll("0+$", "") + ".*")))
-                    .andExpect(jsonPath("$.data.items[%d].modifiedDate".formatted(i)).value(matchesPattern(post.getModifiedDate().toString().replaceAll("0+$", "") + ".*")));
-        }
+        checkPosts(posts, resultActions);
     }
 
     @Test
@@ -168,22 +173,37 @@ public class ApiV1PostControllerTest {
         Page<Post> postPage = postService.getListedItems(page, pageSize , keywordType, keyword);
         List<Post> posts = postPage.getContent();
 
-        for(int i = 0; i < posts.size(); i++) {
+        checkPosts(posts, resultActions);
+    }
 
-            Post post = posts.get(i);
+    @Test
+    @DisplayName("글 다건 조회 - 검색 - 내용, 페이징이 되어야 함.")
+    void items3() throws Exception {
 
-            resultActions
-                    .andExpect(jsonPath("$.data.items[%d]".formatted(i)).exists())
-                    .andExpect(jsonPath("$.data.items[%d].id".formatted(i)).value(post.getId()))
-                    .andExpect(jsonPath("$.data.items[%d].title".formatted(i)).value(post.getTitle()))
-                    .andExpect(jsonPath("$.data.items[%d].content".formatted(i)).doesNotExist())
-                    .andExpect(jsonPath("$.data.items[%d].authorId".formatted(i)).value(post.getAuthor().getId()))
-                    .andExpect(jsonPath("$.data.items[%d].authorName".formatted(i)).value(post.getAuthor().getNickname()))
-                    .andExpect(jsonPath("$.data.items[%d].published".formatted(i)).value(post.isPublished()))
-                    .andExpect(jsonPath("$.data.items[%d].listed".formatted(i)).value(post.isListed()))
-                    .andExpect(jsonPath("$.data.items[%d].createdDate".formatted(i)).value(matchesPattern(post.getCreatedDate().toString().replaceAll("0+$", "") + ".*")))
-                    .andExpect(jsonPath("$.data.items[%d].modifiedDate".formatted(i)).value(matchesPattern(post.getModifiedDate().toString().replaceAll("0+$", "") + ".*")));
-        }
+        int page = 1;
+        int pageSize = 3;
+        String keywordType = "content";
+        String keyword = "content";
+
+        ResultActions resultActions = mvc.perform(
+                        get("/api/v1/posts?page=%d&pageSize=%d&keywordType=%s&keyword=%s"
+                                .formatted(page, pageSize, keywordType, keyword)))
+                .andDo(print());
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostController.class))
+                .andExpect(handler().methodName("getItems"))
+                .andExpect(jsonPath("$.code").value("200-1"))
+                .andExpect(jsonPath("$.msg").value("글 목록 조회가 완료되었습니다."))
+                .andExpect(jsonPath("$.data.items.length()").value( pageSize))
+                .andExpect(jsonPath("$.data.currentPageNo").value(page))
+                .andExpect(jsonPath("$.data.totalPages").value(3))
+                .andExpect(jsonPath("$.data.totalItems").value(7));
+
+        Page<Post> postPage = postService.getListedItems(page, pageSize , keywordType, keyword);
+        List<Post> posts = postPage.getContent();
+
+        checkPosts(posts, resultActions);
     }
 
     @Test
