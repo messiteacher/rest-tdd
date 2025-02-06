@@ -1,5 +1,7 @@
 package com.example.rest_tdd;
 
+import com.example.rest_tdd.domain.member.member.entity.Member;
+import com.example.rest_tdd.domain.member.member.service.MemberService;
 import com.example.rest_tdd.domain.post.post.controller.ApiV1PostController;
 import com.example.rest_tdd.domain.post.post.entity.Post;
 import com.example.rest_tdd.domain.post.post.service.PostService;
@@ -34,6 +36,9 @@ public class ApiV1PostControllerTest {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private MemberService memberService;
 
     private void checkPost(ResultActions resultActions, Post post) throws Exception {
 
@@ -195,12 +200,45 @@ public class ApiV1PostControllerTest {
                 .andExpect(handler().methodName("getItems"))
                 .andExpect(jsonPath("$.code").value("200-1"))
                 .andExpect(jsonPath("$.msg").value("글 목록 조회가 완료되었습니다."))
-                .andExpect(jsonPath("$.data.items.length()").value( pageSize))
+                .andExpect(jsonPath("$.data.items.length()").value(pageSize))
                 .andExpect(jsonPath("$.data.currentPageNo").value(page))
                 .andExpect(jsonPath("$.data.totalPages").value(3))
                 .andExpect(jsonPath("$.data.totalItems").value(7));
 
         Page<Post> postPage = postService.getListedItems(page, pageSize , keywordType, keyword);
+        List<Post> posts = postPage.getContent();
+
+        checkPosts(posts, resultActions);
+    }
+
+    @Test
+    @DisplayName("내가 작성한 글 조회 (user1) - 검색, 페이징이 되어야 함.")
+    void mines() throws Exception {
+
+        int page = 1;
+        int pageSize = 3;
+        String keywordType = "";
+        String keyword = "";
+        String apiKey = "user1";
+
+        ResultActions resultActions = mvc.perform(
+                        get("/api/v1/posts/mine?page=%d&pageSize=%d&keywordType=%s&keyword=%s"
+                                .formatted(page, pageSize, keywordType, keyword))
+                                .header("Authorization", "Bearer " + apiKey))
+                .andDo(print());
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostController.class))
+                .andExpect(handler().methodName("getMines"))
+                .andExpect(jsonPath("$.code").value("200-1"))
+                .andExpect(jsonPath("$.msg").value("내 글 목록 조회가 완료되었습니다."))
+                .andExpect(jsonPath("$.data.items.length()").value(pageSize))
+                .andExpect(jsonPath("$.data.currentPageNo").value(page))
+                .andExpect(jsonPath("$.data.totalPages").value(2))
+                .andExpect(jsonPath("$.data.totalItems").value(4));
+
+        Member author = memberService.findByApiKey(apiKey).get();
+        Page<Post> postPage = postService.getMines(author, page, pageSize , keywordType, keyword);
         List<Post> posts = postPage.getContent();
 
         checkPosts(posts, resultActions);
