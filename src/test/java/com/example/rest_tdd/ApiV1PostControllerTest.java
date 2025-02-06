@@ -115,7 +115,10 @@ public class ApiV1PostControllerTest {
                 .andExpect(handler().handlerType(ApiV1PostController.class))
                 .andExpect(handler().methodName("getItems"))
                 .andExpect(jsonPath("$.code").value("200-1"))
-                .andExpect(jsonPath("$.msg").value("글 목록 조회가 완료되었습니다."));
+                .andExpect(jsonPath("$.msg").value("글 목록 조회가 완료되었습니다."))
+                .andExpect(jsonPath("$.data.length()").value(3))
+                .andExpect(jsonPath("$.data.currentPage").isNumber())
+                .andExpect(jsonPath("$.data.totalPages").isNumber());
 
         List<Post> posts = postService.getListedItems();
 
