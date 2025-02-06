@@ -81,7 +81,7 @@ public class ApiV1CommentController {
         comment.modify(reqBody.content());
 
         return new RsData<>(
-                "201-1",
+                "200-1",
                 "%d번 댓글 수정이 완료되었습니다.".formatted(comment.getId())
         );
     }
