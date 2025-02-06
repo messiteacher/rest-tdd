@@ -23,6 +23,7 @@ public class ApiV1CommentController {
     private final Rq rq;
 
     @GetMapping
+    @Transactional(readOnly = true)
     public List<CommentDto> getItems(@PathVariable long postId) {
 
         Post post = postService.getItem(postId).orElseThrow(
@@ -36,6 +37,7 @@ public class ApiV1CommentController {
     }
 
     @GetMapping("/{id}")
+    @Transactional(readOnly = true)
     public CommentDto getItem(@PathVariable long postId, @PathVariable long id) {
 
         Post post = postService.getItem(postId).orElseThrow(
