@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -101,5 +102,26 @@ public class ApiV1CommentControllerTest {
                 .andExpect(handler().methodName("modify"))
                 .andExpect(jsonPath("$.code").value("200-1"))
                 .andExpect(jsonPath("$.msg").value("%d번 댓글 수정이 완료되었습니다.".formatted(commentId)));
+    }
+
+    @Test
+    @DisplayName("댓글 삭제")
+    void delete1() throws Exception {
+
+        long postId = 1;
+        long commentId = 1;
+        String apiKey = "user1";
+
+        ResultActions resultActions = mvc.perform(
+                        delete("/api/v1/posts/%d/comments/%d".formatted(postId, commentId))
+                                .header("Authorization", "Bearer " + apiKey)
+                )
+                .andDo(print());
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1CommentController.class))
+                .andExpect(handler().methodName("delete"))
+                .andExpect(jsonPath("$.code").value("200-1"))
+                .andExpect(jsonPath("$.msg").value("%d번 댓글 삭제가 완료되었습니다.".formatted(commentId)));
     }
 }

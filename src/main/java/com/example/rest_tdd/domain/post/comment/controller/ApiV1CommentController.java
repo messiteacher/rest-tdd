@@ -101,7 +101,7 @@ public class ApiV1CommentController {
         post.deleteComment(comment);
 
         return new RsData<>(
-                "201-1",
+                "200-1",
                 "%d번 댓글 삭제가 완료되었습니다.".formatted(comment.getId())
         );
     }
